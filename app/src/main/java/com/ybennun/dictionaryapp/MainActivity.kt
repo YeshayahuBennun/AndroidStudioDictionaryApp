@@ -5,13 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
-import java.lang.reflect.Method
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,14 +23,15 @@ class MainActivity : AppCompatActivity() {
 
         find_button.setOnClickListener {
 
-            val word = word_edit_tex.text
-            val apiKey = "25c1bbbe-665e-426d-b5c7-9f7050cf6b41"
-            var url =
-                "https://www.dictionaryapi.com/api/v3/references/learners/json/$word?key=$apiKey"
+            val url = getUrl()
 
             val stringRequest =
                 StringRequest(Request.Method.GET, url, { response ->
-                    extractDefinitionFromJason(response)
+                    try {
+                        extractDefinitionFromJason(response)
+                    } catch (exception: Exception) {
+                        exception.printStackTrace()
+                    }
                 },
                     { error ->
                         Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
@@ -40,6 +39,13 @@ class MainActivity : AppCompatActivity() {
                 )
             queue.add(stringRequest)
         }
+    }
+
+    private fun getUrl(): String {
+        val word = word_edit_tex.text
+        val apiKey = "25c1bbbe-665e-426d-b5c7-9f7050cf6b41"
+
+        return "https://www.dictionaryapi.com/api/v3/references/learners/json/$word?key=$apiKey"
     }
 
     private fun extractDefinitionFromJason(response: String) {
