@@ -1,5 +1,6 @@
 package com.ybennun.dictionaryapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -13,6 +14,9 @@ import org.json.JSONArray
 import java.lang.reflect.Method
 
 class MainActivity : AppCompatActivity() {
+
+    private val KEY = "WORD_DEFINITION"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -43,5 +47,9 @@ class MainActivity : AppCompatActivity() {
         val firstIndex = jsonArray.getJSONObject(0)
         val getShortDefinition = firstIndex.getJSONArray("shortdef")
         val firstShortDefinition = getShortDefinition.get(0)
+
+        val intent = Intent(this, WordDefinitionActivity::class.java)
+        intent.putExtra(KEY, firstShortDefinition.toString())
+        startActivity(intent)
     }
 }
